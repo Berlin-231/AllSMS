@@ -1,3 +1,4 @@
 # AllSMS
 An app that pushes incoming SMS to Google drive for backup!
-(allsms.gif)
+
+![example](allsms.gif)
