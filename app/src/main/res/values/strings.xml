@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ALLSMS</string>
+    <string name="notification_title">All SMS is in Background</string>
+    <string name="notification_message">Relaying msgs to cloud</string>
+    <string name="ticker_text">IDK</string>
+    <string name="channel_name">a</string>
+    <string name="channel_description">aa</string>
 </resources>
