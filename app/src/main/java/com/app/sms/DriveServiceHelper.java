@@ -8,12 +8,13 @@ import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class DriveServiceHelper {
+public class DriveServiceHelper implements Serializable {
 
 
     private final Executor mExecutor = Executors.newSingleThreadExecutor();

@@ -1,6 +1,9 @@
 package com.app.sms;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     final String welcomeScreenShownPref = "welcomeScreenShown";
     Button b1;
+    Intent  intent;
     SharedPreferences mPrefs;
     @Override
     protected void onResume() {
@@ -78,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
-        filter.setPriority(999);
-        registerReceiver(smsReceiver, filter);
+//        IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+//        filter.setPriority(999);
+//        registerReceiver(smsReceiver, filter);
 
 
         b1= findViewById(R.id.b1);
@@ -101,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+        intent = new Intent(this,SMSService.class);
         // second argument is the default to use if the preference can't be found
         Boolean welcomeScreenShown = mPrefs.getBoolean(welcomeScreenShownPref, false);
         if(!welcomeScreenShown){
@@ -116,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
             else{
                 requestSignIn();
                 b1.setText("All Good! New SMS will be pushed to Drive!");
+
+
             }
         }
 
@@ -135,15 +142,15 @@ public class MainActivity extends AppCompatActivity {
 
            // Toast.makeText(context,"Success 2",Toast.LENGTH_LONG).show();
 
-            readSMS();
-            uploadPdfFile();
+//            readSMS();
+//            uploadPdfFile();
         }
     };
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(smsReceiver);
+//        unregisterReceiver(smsReceiver);
     }
 
     @Override
@@ -202,6 +209,7 @@ Log.d("sms","written");
                             requestSignIn();
                             b1.setText("All Good! New SMS will be pushed to Drive!");
 
+
                         }
                     }
 
@@ -211,6 +219,7 @@ Log.d("sms","written");
     private void handleSignInIntent(Intent data) {
 
         GoogleSignIn.getSignedInAccountFromIntent(data).addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onSuccess(GoogleSignInAccount googleSignInAccount) {
                 GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(MainActivity.this, Collections.singleton(DriveScopes.DRIVE_FILE)) ;
@@ -225,6 +234,14 @@ Log.d("sms","written");
                         .build();
 
                 driveServiceHelper = new DriveServiceHelper(googleDriveService);
+
+                SMSService.driveServiceHelper =driveServiceHelper;
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("drive",driveServiceHelper);
+//                intent.putExtras(bundle);
+//                // intent.putExtras(bundle);
+                startService(intent);
+
 
             }
         })
